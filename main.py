@@ -26,10 +26,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from backend.api.routes.orca import router as orca_router
-from backend.core.config import MODEL_BACKEND
-from backend.services.orca_service import OrcaService, OrcaSessionStore
-
 # Add agent-orchestration to sys.path so that conversation.*, orchestrator.*,
 # agents.*, schemas.*, and location.* are importable as root-level packages.
 import sys
@@ -37,6 +33,13 @@ from pathlib import Path
 _AGENT_DIR = Path(__file__).resolve().parents[1] / "agent-orchestration"
 if str(_AGENT_DIR) not in sys.path:
     sys.path.insert(0, str(_AGENT_DIR))
+
+from backend.api.routes.orca import router as orca_router
+from backend.api.routes.alerts import router as alerts_router
+from backend.core.config import MODEL_BACKEND
+from backend.services.orca_service import OrcaService, OrcaSessionStore
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -135,3 +138,4 @@ def health_check():
 
 
 app.include_router(orca_router)
+app.include_router(alerts_router)
